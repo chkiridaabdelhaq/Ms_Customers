@@ -1,12 +1,15 @@
 package com.ensa.mscustomer.services;
 
+import java.util.List;
+
 import com.ensa.mscustomer.entities.Customer;
 
 public interface CustomerService {
 	
+	public List<Customer> listCustomers();
 	public Customer getCustomer(Long id);
-	public void createCustomer(Customer customer);
-	public void updateCustomer(Customer customer);
+	public Customer createCustomer(Customer customer);
+	public Customer updateCustomer(Customer customer);
 	public Customer getCustomerByName(String firstName);
 	public void deleteCustomer(Long id);
 }

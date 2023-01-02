@@ -1,5 +1,7 @@
 package com.ensa.mscustomer.web;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,18 +24,24 @@ public class CustomerControlle {
 		
 		this.customerService = customerService;
 	}
+	
+	@GetMapping("")
+	public ResponseEntity<List<Customer>> listCustomers(){
+		return ResponseEntity.ok(customerService.listCustomers());
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<Customer> getCustomer(@PathVariable Long id) {
 		return ResponseEntity.ok(customerService.getCustomer(id));
 	}
 	
 	@PostMapping("/save")
-	public void createCustomer(@RequestBody Customer customer) {
-		 customerService.createCustomer(customer);
+	public  ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
+		return ResponseEntity.ok(customerService.createCustomer(customer));
 	}
 	@PutMapping("/update")
-	public void updateCustomer(@RequestBody Customer customer) {
-		customerService.updateCustomer(customer);
+	public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
+		return ResponseEntity.ok(customerService.updateCustomer(customer));
 	}
 	@GetMapping("/name/{firstName}")
 	public  ResponseEntity<Customer> getCustomerByName(@PathVariable String firstName) {

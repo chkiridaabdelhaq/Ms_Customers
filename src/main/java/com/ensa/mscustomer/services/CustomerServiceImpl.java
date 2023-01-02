@@ -1,11 +1,15 @@
 package com.ensa.mscustomer.services;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import com.ensa.mscustomer.dao.CustomerRepository;
 import com.ensa.mscustomer.entities.Customer;
+import com.ensa.mscustomer.exceptions.EntityAlreadyExistsException;
+import com.ensa.mscustomer.exceptions.EntityNotFoundException;
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
@@ -20,8 +24,8 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Customer getCustomer(Long id) {
 		
-		if(id == null) {
-			return null;
+		if(repository.findById(id)==null) {
+			throw new EntityNotFoundException("The customer doesn't exists !");
 		}
 		Customer customer=repository.findById(id).get();
 		
@@ -30,24 +34,39 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void createCustomer(Customer customer) {
+	public Customer createCustomer(Customer customer) {
+
+		if(repository.findByFirstName(customer.getFirstName())!=null) {
+			throw new EntityAlreadyExistsException("The customer has already this name");
+		}
 		
-		repository.save(customer);
+			return	repository.save(customer);
 		
 	}
 
 	@Override
-	public void updateCustomer(Customer customer) {
+	public Customer updateCustomer(Customer customer) {
+	
+		if(repository.findByFirstName(customer.getFirstName())==null) {
+			throw new EntityNotFoundException("The customer doesn't exists");
+		}
 		
-		repository.save(customer);
+		Customer editCustomer=repository.findById(customer.getId()).get();
+		         editCustomer.setFirstName(customer.getFirstName());
+		         editCustomer.setLastName(customer.getLastName());
+		         editCustomer.setAdress(customer.getAdress());
+		         editCustomer.setEmail(customer.getEmail());
+		         editCustomer.setCity(customer.getCity());
+		         
+		 return	repository.save(editCustomer);
 		
 	}
 
 	@Override
 	public Customer getCustomerByName(String firstName) {
 		
-		if(firstName == null) {
-			return null;
+		if(repository.findByFirstName(firstName) == null) {
+			throw new EntityNotFoundException("The customer doesn't exists !");
 		}
 		
 		Customer customer=repository.findByFirstName(firstName);
@@ -58,8 +77,18 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public void deleteCustomer(Long id) {
 		
+		if(repository.findById(id)==null) {
+			throw new EntityNotFoundException("The customer doesn't exists");
+		}
+		
 		repository.deleteById(id);
 		
+	}
+
+	@Override
+	public List<Customer> listCustomers() {
+	
+		return repository.findAll();
 	}
 
 }
