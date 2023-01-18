@@ -2,8 +2,6 @@ package com.ensa.mscustomer.services;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
 
 import com.ensa.mscustomer.dao.CustomerRepository;
@@ -11,7 +9,6 @@ import com.ensa.mscustomer.entities.Customer;
 import com.ensa.mscustomer.exceptions.EntityAlreadyExistsException;
 import com.ensa.mscustomer.exceptions.EntityNotFoundException;
 @Service
-@Transactional
 public class CustomerServiceImpl implements CustomerService {
 	
 	private CustomerRepository repository;
